@@ -12,7 +12,7 @@ def main():
 
     lista_pp = inicializa(constantes_temporais['delta_t'], populacao_presa_inicial, populacao_predador_inicial, inicializacoes_necessarias, runge_kutta_2)
 
-    calcula_passos(constantes_temporais['delta_t'], lista_pp, numero_iteracoes, inicializacoes_necessarias, numero_correcoes, backward_differentiation_formula_3)
+    calcula_passos(constantes_temporais['delta_t'], lista_pp, numero_iteracoes, inicializacoes_necessarias, numero_correcoes, backward_differentiation_formula_3, runge_kutta_2)
 
 
 def define_constantes_temporais():
@@ -26,20 +26,23 @@ def calcula_numero_iteracoes(ct):
 def inicializa(delta_t, pop_presa, pop_predador, inicializacoes, metodo):
     lista_pp = [PredadorPresa(pop_presa, pop_predador, 0)]
     for i in range(inicializacoes):
-        lista_pp.append(metodo(lista_pp[i], delta_t))
-    for x in lista_pp:
-        x.imprime()
+        pp = metodo(lista_pp[i], delta_t)
+        pp.t += 1
+        lista_pp.append(pp)
+    for pp in lista_pp:
+        pp.imprime()
     return lista_pp
 
 
-def calcula_passos(delta_t, lista_pp, n_iter, inicializacoes, n_correcoes, metodo):
+def calcula_passos(delta_t, lista_pp, n_iter, inicializacoes, n_correcoes, metodo_calculador, metodo_preditor):
     lista_pp_copia = copy(lista_pp)
-    for i in range(n_iter - inicializacoes):
-        lista_pp_copia[2] = metodo(lista_pp, delta_t)
-        lista_pp_copia[2] = corrige(lista_pp, lista_pp_copia[2], n_correcoes, delta_t, metodo)
-        lista_pp_copia[0], lista_pp_copia[1] = lista_pp[1], lista_pp[2]
-        lista_pp = lista_pp_copia
-        lista_pp_copia[2].imprime()
+    for i in range(n_iter - (inicializacoes + 1)):
+        pp_k_mais_um = metodo_calculador(lista_pp, delta_t, metodo_preditor=metodo_preditor)
+        pp_k_mais_um = corrige(lista_pp, pp_k_mais_um, n_correcoes, delta_t, metodo_calculador)
+        pp_k_mais_um.t += 1
+        lista_pp_copia[0], lista_pp_copia[1], lista_pp_copia[2] = lista_pp[1], lista_pp[2], pp_k_mais_um
+        lista_pp = copy(lista_pp_copia)
+        pp_k_mais_um.imprime()
 
 
 def corrige(lista_pp, pp_k_mais_um, n_correcoes, delta_t, metodo):
