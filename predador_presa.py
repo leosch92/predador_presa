@@ -15,3 +15,5 @@ class PredadorPresa(object):
         gama, delta = 0.8, 0.001
         return -gama * self.predador + delta * self.presa * self.predador
 
+    def imprime(self):
+        print("Pop.Presa: {:.0f}, Pop.Predador: {:.0f}, t={}".format(self.presa, self.predador, self.t))
