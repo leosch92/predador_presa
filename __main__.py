@@ -6,7 +6,6 @@ from copy import copy
 def main():
     constantes_temporais = define_constantes_temporais()
     numero_correcoes = 2
-    inicializacoes_necessarias = 2
     numero_iteracoes = calcula_numero_iteracoes(constantes_temporais)
     populacao_presa_inicial, populacao_predador_inicial = 1000, 100
 
@@ -15,6 +14,7 @@ def main():
 
     while loop:
         if opcao == 1:
+            inicializacoes_necessarias = 2
             lista_pp = inicializa(constantes_temporais['delta_t'], populacao_presa_inicial, populacao_predador_inicial,
                                   inicializacoes_necessarias, runge_kutta_2)
             calcula_passos(constantes_temporais['delta_t'], lista_pp, numero_iteracoes, inicializacoes_necessarias,
