@@ -10,9 +10,29 @@ def main():
     numero_iteracoes = calcula_numero_iteracoes(constantes_temporais)
     populacao_presa_inicial, populacao_predador_inicial = 1000, 100
 
-    lista_pp = inicializa(constantes_temporais['delta_t'], populacao_presa_inicial, populacao_predador_inicial, inicializacoes_necessarias, runge_kutta_2)
+    option = get_input()
+    loop = True
 
-    calcula_passos(constantes_temporais['delta_t'], lista_pp, numero_iteracoes, inicializacoes_necessarias, numero_correcoes, backward_differentiation_formula_3, runge_kutta_2)
+    while loop:
+        if option == 1:
+            lista_pp = inicializa(constantes_temporais['delta_t'], populacao_presa_inicial, populacao_predador_inicial,
+                                  inicializacoes_necessarias, runge_kutta_2)
+            calcula_passos(constantes_temporais['delta_t'], lista_pp, numero_iteracoes, inicializacoes_necessarias,
+                           numero_correcoes, backward_differentiation_formula_3, runge_kutta_2)
+        elif option == 2:
+            print("AM3")
+        elif option == 9:
+            loop = False
+        else:
+            print("\n")
+            option = get_input()
+
+
+def get_input():
+    try:
+        return int(input("Escolha o método desejado:\n1-BDF3\n2-AM3\n9-Exit\n"))
+    except ValueError:
+        return 0
 
 
 def define_constantes_temporais():
@@ -20,7 +40,7 @@ def define_constantes_temporais():
 
 
 def calcula_numero_iteracoes(ct):
-    return int((ct['t_final'] - ct['t_inicial'])/ct['delta_t'])
+    return int((ct['t_final'] - ct['t_inicial']) / ct['delta_t'])
 
 
 def inicializa(delta_t, pop_presa, pop_predador, inicializacoes, metodo):
