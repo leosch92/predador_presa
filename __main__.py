@@ -16,14 +16,16 @@ def main():
             solucionador = Solucionador(constantes_temporais['delta_t'],
                                         (populacao_presa_inicial, populacao_predador_inicial),
                                         runge_kutta_2, backward_differentiation_formula_3, runge_kutta_2,
-                                        numero_iteracoes, numero_correcoes, inicializacoes_necessarias=2)
+                                        numero_iteracoes, numero_correcoes, inicializacoes_necessarias=2,
+                                        variante=1)
             solucionador.resolve()
             opcao = captura_input()
         elif opcao == 2:
             solucionador = Solucionador(constantes_temporais['delta_t'],
                                         (populacao_presa_inicial, populacao_predador_inicial),
                                         runge_kutta_2, adams_moulton_3, runge_kutta_2,
-                                        numero_iteracoes, numero_correcoes, inicializacoes_necessarias=1)
+                                        numero_iteracoes, numero_correcoes, inicializacoes_necessarias=1,
+                                        variante=1)
             solucionador.resolve()
             opcao = captura_input()
         elif opcao == 9:
