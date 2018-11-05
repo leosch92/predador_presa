@@ -22,11 +22,13 @@ def backward_differentiation_formula_3(lista_pp, delta_t, pp_k_mais_um=None, met
     predador = (18 * lista_pp[2].predador - 9 * lista_pp[1].predador + 2 * lista_pp[0].predador + 6 * delta_t * pp_k_mais_um.f_predador()) / 11.0
     return PredadorPresa(presa, predador, lista_pp[2].t)
 
-def adam_moulton_3(lista_pp, delta_t, pp_k_mais_um=None, metodo_preditor=None):
+
+def adams_moulton_3(lista_pp, delta_t, pp_k_mais_um=None, metodo_preditor=None):
     pp_k_mais_um = checa_e_faz_predicao(pp_k_mais_um, metodo_preditor, lista_pp[1], delta_t)
     presa = lista_pp[1].presa + (delta_t/12) * (-1 * lista_pp[0].f_presa() + 8 * lista_pp[1].f_presa() + 5 * pp_k_mais_um.f_presa())
     predador = lista_pp[1].predador + (delta_t / 12) * (-1 * lista_pp[0].f_predador() + 8 * lista_pp[1].f_predador() + 5 * pp_k_mais_um.f_predador())
     return PredadorPresa(presa, predador, lista_pp[1].t)
+
 
 def checa_e_faz_predicao(pp_k_mais_um, metodo_preditor, pp_k, delta_t):
     if pp_k_mais_um is None:
