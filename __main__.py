@@ -14,7 +14,7 @@ def main():
     while loop:
         if opcao in (1, 2):
             solucionador = Solucionador(constantes_temporais, (populacao_presa_inicial, populacao_predador_inicial),
-                                        numero_correcoes, opcao, 11)
+                                        numero_correcoes, opcao, 1)
             solucionador.resolve()
             opcao = captura_input()
         elif opcao == 9:
