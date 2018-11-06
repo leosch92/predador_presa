@@ -1,38 +1,23 @@
-from predador_presa import PredadorPresa
+def runge_kutta_2(y_k, t_k, delta_t, f):
+    y_k_mais_meio = euler_auxiliar(y_k, t_k, delta_t, f)
+    return y_k + delta_t * f(y_k_mais_meio, t_k + 0.5)
 
 
-def runge_kutta_2(pp_k, delta_t):
-    pp_k_mais_meio = euler_auxiliar(pp_k, delta_t)
-    presa = pp_k.presa + delta_t * pp_k_mais_meio.f_presa()
-    predador = pp_k.predador + delta_t * pp_k_mais_meio.f_predador()
-    return PredadorPresa(presa, predador, pp_k.t)
+def euler_auxiliar(y_k, t_k, delta_t, f):
+    return y_k + delta_t / 2.0 * f(y_k, t_k)
 
 
-def euler_auxiliar(pp_k, delta_t):
-    presa = pp_k.presa + delta_t / 2.0 * pp_k.f_presa()
-    predador = pp_k.predador + delta_t / 2.0 * pp_k.f_predador()
-    return PredadorPresa(presa, predador, pp_k.t)
+def backward_differentiation_formula_3(lista_y, t_k, delta_t, f, y_k_mais_um=None, metodo_preditor=None):
+    y_k_mais_um = checa_e_faz_predicao(y_k_mais_um, lista_y[-1], t_k, delta_t, metodo_preditor, f)
+    return (18 * lista_y[2] - 9 * lista_y[1] + 2 * lista_y[0] + 6 * delta_t * f(y_k_mais_um, t_k + 1)) / 11.0
 
 
-def backward_differentiation_formula_3(lista_pp, delta_t, pp_k_mais_um=None, metodo_preditor=None):
-    pp_k_mais_um = checa_e_faz_predicao(pp_k_mais_um, metodo_preditor, lista_pp[2], delta_t)
-    presa = (18 * lista_pp[2].presa - 9 * lista_pp[1].presa + 2 * lista_pp[0].presa +
-             6 * delta_t * pp_k_mais_um.f_presa()) / 11.0
-    predador = (18 * lista_pp[2].predador - 9 * lista_pp[1].predador + 2 * lista_pp[0].predador +
-                6 * delta_t * pp_k_mais_um.f_predador()) / 11.0
-    return PredadorPresa(presa, predador, lista_pp[2].t)
+def adams_moulton_3(lista_y, t_k, delta_t, f, y_k_mais_um=None, metodo_preditor=None):
+    y_k_mais_um = checa_e_faz_predicao(y_k_mais_um, lista_y[-1], t_k, delta_t, metodo_preditor, f)
+    return lista_y[1] + (delta_t/12) * (-f(lista_y[0], t_k - 1) + 8 * f(lista_y[1], t_k) + 5 * f(y_k_mais_um, t_k + 1))
 
 
-def adams_moulton_3(lista_pp, delta_t, pp_k_mais_um=None, metodo_preditor=None):
-    pp_k_mais_um = checa_e_faz_predicao(pp_k_mais_um, metodo_preditor, lista_pp[1], delta_t)
-    presa = lista_pp[1].presa + (delta_t/12) * (-1 * lista_pp[0].f_presa() +
-                                                8 * lista_pp[1].f_presa() + 5 * pp_k_mais_um.f_presa())
-    predador = lista_pp[1].predador + (delta_t / 12) * (-1 * lista_pp[0].f_predador() +
-                                                        8 * lista_pp[1].f_predador() + 5 * pp_k_mais_um.f_predador())
-    return PredadorPresa(presa, predador, lista_pp[1].t)
-
-
-def checa_e_faz_predicao(pp_k_mais_um, metodo_preditor, pp_k, delta_t):
-    if pp_k_mais_um is None:
-        return metodo_preditor(pp_k, delta_t)
-    return pp_k_mais_um
+def checa_e_faz_predicao(y_k_mais_um, y_k, t_k, delta_t, metodo_preditor, f):
+    if y_k_mais_um is None:
+        return metodo_preditor(y_k, t_k, delta_t, f)
+    return y_k_mais_um
