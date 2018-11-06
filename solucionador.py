@@ -1,33 +1,44 @@
 from predador_presa import PredadorPresa
-from copy import copy
+from lista_utils import atualiza_lista
 from numpy import array
+from metodos_numericos import runge_kutta_2, backward_differentiation_formula_3, adams_moulton_3
 
 
 class Solucionador(object):
 
-    def __init__(self, constantes_temporais, condicao_inicial, metodo_inicializador,
-                 metodo_preditor, numero_iteracoes, numero_correcoes, variante, metodo_calculador):
+    def __init__(self, constantes_temporais, condicao_inicial, numero_correcoes, opcao_metodo, variante):
         self.constantes_temporais = constantes_temporais
         self.condicao_inicial = condicao_inicial
-        self.metodo_inicializador = metodo_inicializador
-        self.metodo_preditor = metodo_preditor
-        self.numero_iteracoes = numero_iteracoes
+        self.metodo_inicializador = runge_kutta_2
+        self.metodo_preditor = runge_kutta_2
+        self.numero_iteracoes = self.calcula_numero_iteracoes()
         self.numero_correcoes = numero_correcoes
         self.t_atual = constantes_temporais['t_inicial']
         self.inicializacoes_necessarias = 0
+        self.opcao_metodo = opcao_metodo
+        self.metodo_calculador = self.escolhe_metodo_calculador()
         self.variante = variante
-        self.metodo_calculador = metodo_calculador
+
+    def calcula_numero_iteracoes(self):
+        return int((self.constantes_temporais['t_final'] -
+                    self.constantes_temporais['t_inicial']) / self.constantes_temporais['delta_t'])
+
+    def escolhe_metodo_calculador(self):
+        if self.opcao_metodo == 1:
+            return backward_differentiation_formula_3
+        else:
+            return adams_moulton_3
 
     def resolve(self):
-        if self.variante == 1:
+        if self.opcao_metodo == 1:
             self.inicializacoes_necessarias = 2
-        elif self.variante == 2:
+        elif self.opcao_metodo == 2:
             self.inicializacoes_necessarias = 1
         lista_pp = self.inicializa()
         self.calcula_passos(lista_pp)
 
     def inicializa(self):
-        lista_pp = [PredadorPresa(self.condicao_inicial[0], self.condicao_inicial[1], self.t_atual, self.variante)]
+        lista_pp = [PredadorPresa(self.condicao_inicial[0], self.condicao_inicial[1], 0, self.variante)]
         for i in range(self.inicializacoes_necessarias):
             pp_k_mais_um = self.inicializa_pp(lista_pp[i])
             self.t_atual = self.constantes_temporais['delta_t'] * pp_k_mais_um.indice_passo
@@ -48,7 +59,7 @@ class Solucionador(object):
             pp_k_mais_um = self.calcula_pp(lista_pp)
             pp_k_mais_um = self.corrige(lista_pp, pp_k_mais_um)
             self.t_atual = self.constantes_temporais['delta_t'] * pp_k_mais_um.indice_passo
-            lista_pp = self.atualiza_lista_pp(lista_pp, pp_k_mais_um)
+            lista_pp = atualiza_lista(lista_pp, pp_k_mais_um)
             pp_k_mais_um.imprime()
 
     def calcula_pp(self, lista_pp):
@@ -63,12 +74,3 @@ class Solucionador(object):
         for j in range(self.numero_correcoes):
             pp_k_mais_um = self.calcula_pp(lista_pp)
         return pp_k_mais_um
-
-    @staticmethod
-    def atualiza_lista_pp(lista_pp, pp_k_mais_um):
-        lista_pp_copia = []
-        for j in range(len(lista_pp) - 1):
-            lista_pp_copia.append(lista_pp[j + 1])
-        lista_pp_copia.append(pp_k_mais_um)
-        return copy(lista_pp_copia)
-

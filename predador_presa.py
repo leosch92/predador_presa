@@ -17,10 +17,6 @@ class PredadorPresa(object):
         f_predador = -gama * y[1] + delta * y[0] * y[1]
         return array([f_presa, f_predador])
 
-    # def f_predador(self, y, t):
-    #     gama, delta = 0.8, 0.001
-    #     return -gama * y[1] + delta * y[0] * y[1]
-
     def define_coeficiente(self, t):
         if self.variante == 1:
             return 1
