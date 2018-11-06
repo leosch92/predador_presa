@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from solucionador import Solucionador
 from metodos_numericos import runge_kutta_2, backward_differentiation_formula_3, adams_moulton_3
 
@@ -7,25 +9,16 @@ def main():
     numero_correcoes = 2
     numero_iteracoes = calcula_numero_iteracoes(constantes_temporais)
     populacao_presa_inicial, populacao_predador_inicial = 1000, 100
+    metodos_calculadores = {1: backward_differentiation_formula_3, 2: adams_moulton_3}
 
     opcao = captura_input()
     loop = True
 
     while loop:
-        if opcao == 1:
-            solucionador = Solucionador(constantes_temporais['delta_t'],
-                                        (populacao_presa_inicial, populacao_predador_inicial),
-                                        runge_kutta_2, backward_differentiation_formula_3, runge_kutta_2,
-                                        numero_iteracoes, numero_correcoes, inicializacoes_necessarias=2,
-                                        variante=1)
-            solucionador.resolve()
-            opcao = captura_input()
-        elif opcao == 2:
-            solucionador = Solucionador(constantes_temporais['delta_t'],
-                                        (populacao_presa_inicial, populacao_predador_inicial),
-                                        runge_kutta_2, adams_moulton_3, runge_kutta_2,
-                                        numero_iteracoes, numero_correcoes, inicializacoes_necessarias=1,
-                                        variante=1)
+        if opcao in (1, 2):
+            solucionador = Solucionador(constantes_temporais, (populacao_presa_inicial, populacao_predador_inicial),
+                                        runge_kutta_2, runge_kutta_2, numero_iteracoes, numero_correcoes,
+                                        opcao, metodos_calculadores[opcao])
             solucionador.resolve()
             opcao = captura_input()
         elif opcao == 9:
