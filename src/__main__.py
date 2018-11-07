@@ -6,20 +6,17 @@ from src.solucionador import Solucionador
 def main():
     constantes_temporais = {'t_final': 100.0, 't_inicial': 0.0, 'delta_t': 0.1}
     numero_correcoes = 2
-    populacao_presa_inicial, populacao_predador_inicial = 1000, 100
-
+    constantes_populacionais = {'populacao_presa_inicial': 1000,
+                                'populacao_predador_inicial': 100,
+                                'populacao_presa_maxima': 2500}
     metodo, variante = captura_input()
     loop = True
 
     while loop:
-        if metodo in (1, 2) and variante in (1, 2):
-            solucionador = Solucionador(constantes_temporais, (populacao_presa_inicial, populacao_predador_inicial),
+        if metodo in (1, 2) and variante in (1, 2, 3):
+            solucionador = Solucionador(constantes_temporais, constantes_populacionais,
                                         numero_correcoes, metodo, variante)
             solucionador.resolve()
-            metodo, variante = captura_input()
-        elif variante == 3:
-            #TODO implementar terceira variante, incluindo no primeiro if
-            print("Ainda não implementado")
             metodo, variante = captura_input()
         elif variante == 9:
             loop = False
