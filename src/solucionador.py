@@ -6,9 +6,9 @@ from src.metodos_numericos import runge_kutta_2, backward_differentiation_formul
 
 class Solucionador(object):
 
-    def __init__(self, constantes_temporais, condicao_inicial, numero_correcoes, opcao_metodo, variante):
+    def __init__(self, constantes_temporais, constantes_populacionais, numero_correcoes, opcao_metodo, variante):
         self.constantes_temporais = constantes_temporais
-        self.condicao_inicial = condicao_inicial
+        self.constantes_populacionais = constantes_populacionais
         self.metodo_inicializador = runge_kutta_2
         self.metodo_preditor = runge_kutta_2
         self.numero_iteracoes = self.calcula_numero_iteracoes()
@@ -26,8 +26,9 @@ class Solucionador(object):
     def escolhe_metodo_calculador(self):
         if self.opcao_metodo == 1:
             return backward_differentiation_formula_3
-        else:
+        elif self.opcao_metodo == 2:
             return adams_moulton_3
+        return None
 
     def resolve(self):
         if self.opcao_metodo == 1:
@@ -38,7 +39,7 @@ class Solucionador(object):
         self.calcula_passos(lista_pp)
 
     def inicializa(self):
-        lista_pp = [PredadorPresa(self.condicao_inicial[0], self.condicao_inicial[1], 0, self.variante)]
+        lista_pp = [PredadorPresa(self.constantes_populacionais, 0, self.variante)]
         for i in range(self.inicializacoes_necessarias):
             pp_k_mais_um = self.inicializa_pp(lista_pp[i])
             self.t_atual = self.constantes_temporais['delta_t'] * pp_k_mais_um.indice_passo
@@ -48,7 +49,7 @@ class Solucionador(object):
         return lista_pp
 
     def inicializa_pp(self, pp_k):
-        pp_k_mais_um = PredadorPresa(0, 0, pp_k.indice_passo + 1, self.variante)
+        pp_k_mais_um = PredadorPresa(self.constantes_populacionais, pp_k.indice_passo + 1, self.variante)
         y_k_mais_um = self.metodo_inicializador(array([pp_k.presa, pp_k.predador]), self.t_atual,
                                                 self.constantes_temporais['delta_t'], pp_k.f)
         pp_k_mais_um.presa, pp_k_mais_um.predador = y_k_mais_um[0], y_k_mais_um[1]
@@ -63,7 +64,7 @@ class Solucionador(object):
             pp_k_mais_um.imprime()
 
     def calcula_pp(self, lista_pp):
-        pp_k_mais_um = PredadorPresa(0, 0, lista_pp[-1].indice_passo + 1, self.variante)
+        pp_k_mais_um = PredadorPresa(self.constantes_populacionais, lista_pp[-1].indice_passo + 1, self.variante)
         lista_y = [array([pp.presa, pp.predador]) for pp in lista_pp]
         y_k_mais_um = self.metodo_calculador(lista_y, self.t_atual, self.constantes_temporais['delta_t'],
                                              lista_pp[-1].f, metodo_preditor=self.metodo_preditor)
