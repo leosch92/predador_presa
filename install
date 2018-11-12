@@ -1,0 +1,4 @@
+sudo apt-get install python3
+sudo apt-get install ffmpeg
+source ./venv3/bin/activate
+pip install -r requirements.txt
