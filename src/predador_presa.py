@@ -14,7 +14,7 @@ class PredadorPresa(object):
     def f(self, y, t):
         alpha, beta, gama, delta = 0.8, 0.004, 0.8, 0.001
         coeficiente = self.define_coeficiente(y, t)
-        f_presa = coeficiente * alpha * y[0] - beta * y[0] * y[1]
+        f_presa = coeficiente * alpha - beta * y[0] * y[1]
         f_predador = -gama * y[1] + delta * y[0] * y[1]
         return array([f_presa, f_predador])
 
