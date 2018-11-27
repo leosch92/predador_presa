@@ -12,19 +12,19 @@ class PredadorPresa(object):
         self.variante = variante
 
     def f(self, y, t):
-        alpha, beta, gama, delta = 0.8, 0.004, 0.8, 0.001
-        coeficiente = self.define_coeficiente(y, t)
-        f_presa = coeficiente * alpha - beta * y[0] * y[1]
+        alpha, beta, gama, delta = (1600/17)*(0.008), 0.008, 0.8, 0.004
+        aumento_presa = self.define_aumento_presa(y, t, alpha)
+        f_presa = aumento_presa - beta * y[0] * y[1]
         f_predador = -gama * y[1] + delta * y[0] * y[1]
         return array([f_presa, f_predador])
 
-    def define_coeficiente(self, y, t):
+    def define_aumento_presa(self, y, t, alpha):
         if self.variante == 1:
-            return 1
+            return alpha * y[0]
         elif self.variante == 2:
-            return 1.5 + sin(t)
+            return (1.5 + sin(t))* alpha * y[0]
         elif self.variante == 3:
-            return self.presa_max - y[0]
+            return (self.presa_max - y[0])/self.presa_max * alpha * y[0]
 
     def imprime(self):
         print("Pop.Presa: {:.0f}, Pop.Predador: {:.0f}, k={}".format(self.presa, self.predador, self.indice_passo))

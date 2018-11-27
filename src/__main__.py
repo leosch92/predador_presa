@@ -8,7 +8,7 @@ def main():
     numero_correcoes = 2
     constantes_populacionais = {'populacao_presa_inicial': 1000,
                                 'populacao_predador_inicial': 100,
-                                'populacao_presa_maxima': 2500}
+                                'populacao_presa_maxima': 2000}
     metodo, variante = captura_input()
     loop = True
 
