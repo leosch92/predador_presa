@@ -1,3 +1,4 @@
+'''
 def runge_kutta_2(y_k, t_k, delta_t, f):
     y_k_mais_meio = euler_auxiliar(y_k, t_k, delta_t, f)
     return y_k + delta_t * f(y_k_mais_meio, t_k + 0.5)
@@ -5,7 +6,12 @@ def runge_kutta_2(y_k, t_k, delta_t, f):
 
 def euler_auxiliar(y_k, t_k, delta_t, f):
     return y_k + delta_t / 2.0 * f(y_k, t_k)
+'''
 
+def runge_kutta_2(y_k, t_k, delta_t, f):
+    k1 = f(y_k, t_k)
+    k2 = f(y_k + delta_t * k1, t_k+delta_t)
+    return y_k + (delta_t/2) * (k1 + k2)
 
 def backward_differentiation_formula_3(lista_y, t_k, delta_t, f, y_k_mais_um=None, metodo_preditor=None):
     y_k_mais_um = checa_e_faz_predicao(y_k_mais_um, lista_y[-1], t_k, delta_t, metodo_preditor, f)
