@@ -12,7 +12,8 @@ class PredadorPresa(object):
         self.variante = variante
 
     def f(self, y, t):
-        alpha, beta, gama, delta = (1600/17)*(0.008), 0.008, 0.8, 0.004
+        #alpha, beta, gama, delta = 0.8, 0.004, 0.8, 0.001
+        alpha, beta, gama, delta = 0.8, 0.004, 0.8, 0.001
         aumento_presa = self.define_aumento_presa(y, t, alpha)
         f_presa = aumento_presa - beta * y[0] * y[1]
         f_predador = -gama * y[1] + delta * y[0] * y[1]
