@@ -30,7 +30,7 @@ def captura_input():
         return int(input("Escolha o método desejado:\n1- BDF3\n2- AM3\n")), \
                int(input("Escolha a variante do problema desejada:\n"
                          "1- Crescimento da população ilimitado\n"
-                         "2- Coeficiente de fertilidade com comportamente cíclico\n"
+                         "2- Coeficiente de fertilidade com comportamento cíclico\n"
                          "3- Limitação superior à população de presas\n"
                          "9- Sair\n"))
     except ValueError:
